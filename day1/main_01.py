@@ -1,4 +1,5 @@
 input_file = '/home/robin/AdventOfCode/AdventOfCode2023/day1/input.txt'
+example2 = '/home/robin/AdventOfCode/AdventOfCode2023/day1/example2.txt'
 
 words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 rev_words = ['orez', 'eno', 'owt', 'eerht', 'ruof', 'evif', 'xis', 'neves', 'thgie', 'enin']
@@ -103,12 +104,12 @@ def main_01a(input_file):
 
 def main_01b(input_file):
     lines = extract_lines_from_file(input_file)
-    lines = lines[5:10]
+    lines = lines[40:50]
     total_sum = 0
     for line in lines:
         int_pair = extract_pair_from_line(line)
-        print(f'line: {line}, int_pair: {int_pair}')
         number = get_number(int_pair)
+        print(f'line: {line}, int_pair: {int_pair} -> {number}\n')
         total_sum += number
     return total_sum
 
