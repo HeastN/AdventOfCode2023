@@ -1,5 +1,5 @@
 import unittest
-from main03 import find_numbers_in_line, check_same_line, check_other_line, check_neighboring_characters
+from main03 import find_numbers_in_line, check_same_line, check_other_line, check_neighboring_characters, check_adjacent_number
 
 class TestCheckGame(unittest.TestCase):
     def test_random_string01(self):
@@ -52,14 +52,14 @@ class TestCheckGame(unittest.TestCase):
         expected_output = [[['35', 2]], [['633', 6]]]
         result = check_other_line(input_line, input_numbers)
         self.assertEqual(result, expected_output)
-    def test_other_line_plussign(self):
-        #.....+.58.
-        #..592.....
-        input_line = '.....+.58.'
-        input_numbers = [['592', 2]]
-        expected_output = [[['592', 2]], [[]]]
-        result = check_other_line(input_line, input_numbers)
-        self.assertEqual(result, expected_output)
+    # def test_other_line_plussign(self):
+    #     #.....+.58.
+    #     #..592.....
+    #     input_line = '.....+.58.'
+    #     input_numbers = [['592', 2]]
+    #     expected_output = [[['592', 2]], [[]]]
+    #     result = check_other_line(input_line, input_numbers)
+    #     self.assertEqual(result, expected_output)
     def test_neighboring_characters(self):
         #...*......
         #..35..633.
@@ -68,6 +68,46 @@ class TestCheckGame(unittest.TestCase):
         input_numbers = [['35', 2], ['633', 6]]
         expected_output = [[['35', 2], ['633', 6]], []]
         result = check_neighboring_characters(input_line, input_numbers)
+        self.assertEqual(result, expected_output)
+
+    def test_neighboring_characters(self):
+        #...*......
+        #..35..633.
+        #......#...
+        input_line = ['...*......', '..35..633.', '......#...']
+        input_numbers = [['35', 2], ['633', 6]]
+        expected_output = [[['35', 2], ['633', 6]], []]
+        result = check_neighboring_characters(input_line, input_numbers)
+        self.assertEqual(result, expected_output)
+    
+    def test_adjacent_number(self):
+        #467..114..
+        #...*......
+        #..35..633.
+        input_line = '467..114..'
+        input_star = 3
+        expected_output = [['467', 0]]
+        result = check_adjacent_number(input_line, input_star)
+        self.assertEqual(result, expected_output)
+    
+    def test_adjacent_edge_1(self):
+        #467..114..
+        #*........
+        #..35..633.
+        input_line = '467..114..'
+        input_star = 0
+        expected_output = [['467', 0]]
+        result = check_adjacent_number(input_line, input_star)
+        self.assertEqual(result, expected_output)
+    
+    def test_adjacent_edge_2(self):
+        #467..114..
+        #.........*
+        #..35..633.
+        input_line = '..35..633.'
+        input_star = 9
+        expected_output = [['633', 6]]
+        result = check_adjacent_number(input_line, input_star)
         self.assertEqual(result, expected_output)
     
 

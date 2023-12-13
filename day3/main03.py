@@ -119,6 +119,18 @@ def check_other_line(other_line, numbers):
 def contains_only_dots_and_digits(s):
     return all(c.isdigit() or c == '.' for c in s)  
 
+def find_stars_in_line(line):
+    # Return a list of star indexes
+    stars = []
+    i = 0
+    while i < len(line):
+        if line[i] == '*':
+            stars.append(i)
+            i += 1
+        else:
+            i += 1
+    return stars
+
 def main03a(filepath):
     lines = extract_lines_from_file(filepath)
     # lines = lines[22:25]
@@ -170,5 +182,96 @@ def main03a_error(filepath):
         # Optionally, print out more details about the variables or state of the program
         # to help diagnose the problem.
 
-print(main03a(puzzle_path))
-# main03a_error(puzzle_path)
+def main03b(filepath):
+    # Check for '*' in line and see if there are any numbers touching it. If exactly two numbers
+    # are touching it, then the numbers are multiplied together and added to the sum.
+
+    lines = extract_lines_from_file(filepath)
+    # test: only first three lines
+    # lines = lines[0:3]
+    # print(f'Lines: {lines}\n')
+    total_sum = 0
+    i = 0
+    # iterate through the lines and check for stars
+    while i < len(lines):
+        # print(f'Line {i}: {lines[i]}')
+        stars_in_current_line = find_stars_in_line(lines[i])
+        # print(f'Stars: {stars_in_current_line}')
+        # if there are no stars in the line, continue to the next line
+        if not stars_in_current_line:
+            i += 1
+            continue
+
+        # if there are stars in the line, check if there are numbers adjacent to the star
+        # (above, below, left, right and diagonally)
+
+        for star in stars_in_current_line:
+            # star is the index of the star in the line 
+            adjacent_numbers = []  
+            # check above
+            if i > 0:
+                adjacent_numbers_above = check_adjacent_number(lines[i-1], star)
+                if adjacent_numbers_above:
+                    adjacent_numbers.extend(adjacent_numbers_above)
+            # check same line
+            adjacent_numbers_same_line = check_adjacent_number(lines[i], star)
+            if adjacent_numbers_same_line:
+                adjacent_numbers.extend(adjacent_numbers_same_line)
+
+            # check below
+            if i < len(lines)-1:
+                adjacent_numbers_below = check_adjacent_number(lines[i+1], star)
+                if adjacent_numbers_below:
+                    adjacent_numbers.extend(adjacent_numbers_below)
+            # check if there are exactly two numbers adjacent to the star
+            # if there are, multiply them together and add to the total sum
+            # if there are not, continue to the next star
+            if len(adjacent_numbers) == 2:
+                total_sum += int(adjacent_numbers[0][0]) * int(adjacent_numbers[1][0])
+            else:
+                continue
+        i += 1
+    return total_sum
+        
+    
+
+def check_adjacent_number(line, star):
+    numbers = find_numbers_in_line(line)
+    adjacent_numbers = []
+    # print(f'Numbers in line: {numbers}')
+    # check if any of the numbers are adjacent to the star
+    for number in numbers:
+        number_start_index = number[1]
+        number_end_index = number_start_index + len(number[0])-1
+        if star > 0 and star < len(line)-1:
+            if number_end_index == star-1 or number_start_index == star+1:
+                # number is adjacent to the star
+                adjacent_numbers.append(number)
+            elif number_start_index <= star <= number_end_index:
+                # star is directly above/below the number
+                adjacent_numbers.append(number)
+        elif star == 0:
+            # star is at the beginning of the line
+            if number_start_index == star+1:
+                # number is adjacent to the star
+                adjacent_numbers.append(number)
+            elif number_start_index <= star <= number_end_index:
+                # star is directly above/below the number
+                adjacent_numbers.append(number)
+        elif star == len(line)-1:
+            # star is at the end of the line
+            if number_end_index == star-1:
+                # number is adjacent to the star
+                adjacent_numbers.append(number)
+            elif number_start_index <= star <= number_end_index:
+                # star is directly above/below the number
+                adjacent_numbers.append(number)
+    return adjacent_numbers
+
+
+    return total_sum
+
+# print(main03a(puzzle_path))
+print(main03b(example_path))
+print(main03b(puzzle_path))
+
